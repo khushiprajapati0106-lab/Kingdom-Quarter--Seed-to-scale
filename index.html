@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arthashastra: Seed-to-Scale | Startup Finance Simulator</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 { margin: 0; color: var(--accent); font-size: 2rem; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .metric-title { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+        .metric-value { font-size: 1.5rem; font-weight: bold; margin-top: 5px; color: var(--text-main); }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 { font-size: 1.2rem; color: var(--accent); margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+        .district-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .district-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .district-input label { font-size: 0.9rem; font-weight: 600; }
+        .district-input span { font-size: 0.75rem; color: var(--text-muted); }
+        .district-input input {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: var(--accent-hover); }
+
+        .log-box {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry { margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #1e293b; }
+        .log-entry.event { color: #f59e0b; }
+        .log-entry.success { color: var(--success); }
+        .log-entry.danger { color: var(--danger); }
+
+        .roles-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .roles-list li {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .role-name { font-weight: bold; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Kingdom Quarter: Seed-to-Scale</h1>
+        <div class="subtitle">Kautilayan Treasury & Liquidity Management for Startup Finance Teams</div>
+    </header>
+
+    <!-- Top Dashboard Metrics -->
+    <div class="dashboard">
+        <div class="metric-card">
+            <div class="metric-title">Current Quarter</div>
+            <div class="metric-value" id="current-quarter">Q1</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Treasury (Kosha)</div>
+            <div class="metric-value" id="treasury-balance">$1,000,000</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Monthly Burn</div>
+            <div class="metric-value" id="monthly-burn">$50,000</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">Estimated Runway</div>
+            <div class="metric-value" id="runway-months">20.0 Mos</div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <!-- Left Column: Actions & Allocation -->
+        <div>
+            <div class="panel">
+                <h2>Quarterly Capital Allocation (Budgeting)</h2>
+                <div class="district-grid">
+                    <div class="district-input">
+                        <label for="alloc-fort">1. Royal Fort</label>
+                        <span>Compliance & Tech Stack</span>
+                        <input type="number" id="alloc-fort" value="30000" step="5000">
+                    </div>
+                    <div class="district-input">
+                        <label for="alloc-market">2. City Market</label>
+                        <span>Customer Acquisition & Sales</span>
+                        <input type="number" id="alloc-market" value="50000" step="5000">
+                    </div>
+                    <div class="district-input">
+                        <label for="alloc-country">3. Countryside</label>
+                        <span>R&D & Product Engineering</span>
+                        <input type="number" id="alloc-country" value="40000" step="5000">
+                    </div>
+                    <div class="district-input">
+                        <label for="alloc-reserve">4. Granary Reserve</label>
+                        <span>Emergency Kosha Liquidity Buffer</span>
+                        <input type="number" id="alloc-reserve" value="30000" step="5000">
+                    </div>
+                </div>
+
+                <button class="btn" id="next-quarter-btn" onclick="processQuarter()">Execute Quarter Strategy</button>
+            </div>
+
+            <div class="panel">
+                <h2>Akshapatala Audit & Event Logs</h2>
+                <div class="log-box" id="game-log">
+                    <div class="log-entry">[System Initialized] Game started with $1,000,000 Kosha. Allocate funds for Q1.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Kautilayan Roles & Information -->
+        <div>
+            <div class="panel">
+                <h2>Team Responsibilities</h2>
+                <ul class="roles-list">
+                    <li>
+                        <span class="role-name">Samaharta (CFO)</span><br>
+                        Oversees total income forecasts and balances market growth allocations.
+                    </li>
+                    <li>
+                        <span class="role-name">Sannidhata (Treasury Head)</span><br>
+                        Monitors Kosha balance and ensures Granary Reserve maintains at least 3 months burn buffer.
+                    </li>
+                    <li>
+                        <span class="role-name">Akshapatala (Auditor)</span><br>
+                        Tracks variances between planned expenditure and unexpected risk impacts.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <h2>Game Directives</h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                    Survive 4 quarters without bankrupting the Kosha. Invest in City Market to boost recurring income, and maintain Granary Reserves to absorb quarterly economic shocks.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State variables
+    let state = {
+        quarter: 1,
+        kosha: 1000000,
+        monthlyBurn: 50000,
+        mrr: 20000, // Monthly Recurring Revenue
+        gameOver: false
+    };
+
+    // Kautilayan Random Events
+    const events = [
+        {
+            title: "Delayed Invoices (Seasonal Shortfall)",
+            description: "An enterprise client delayed payments by 60 days. Drawn $40,000 extra from emergency cash.",
+            cost: 40000,
+            type: "danger"
+        },
+        {
+            title: "Regulatory Compliance Audit",
+            description: "Royal auditors inspected internal controls. Royal Fort investment reduced penalties by $15,000.",
+            cost: 10000,
+            type: "event"
+        },
+        {
+            title: "Trade Route Boom",
+            description: "High adoption in City Market segment increased quarterly revenue unexpectedly!",
+            cost: -30000, // Positive gain
+            type: "success"
+        },
+        {
+            title: "Talent Poaching Threat",
+            description: "Competitors attempted to recruit core developers. Extra $25,000 spent on retaining team.",
+            cost: 25000,
+            type: "danger"
+        }
+    ];
+
+    function log(message, type = '') {
+        const logBox = document.getElementById('game-log');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.innerText = `[Q${state.quarter}] ${message}`;
+        logBox.appendChild(entry);
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function updateUI() {
+        document.getElementById('current-quarter').innerText = `Q${state.quarter}`;
+        document.getElementById('treasury-balance').innerText = `$${state.kosha.toLocaleString()}`;
+        document.getElementById('monthly-burn').innerText = `$${state.monthlyBurn.toLocaleString()}`;
+        
+        // Calculate runway (Kosha / Net Monthly Burn)
+        let netBurn = state.monthlyBurn - state.mrr;
+        let runway = netBurn > 0 ? (state.kosha / netBurn / 3).toFixed(1) : "Infinite";
+        document.getElementById('runway-months').innerText = `${runway} Mos`;
+    }
+
+    function processQuarter() {
+        if (state.gameOver) return;
+
+        // Get inputs
+        const fort = parseFloat(document.getElementById('alloc-fort').value) || 0;
+        const market = parseFloat(document.getElementById('alloc-market').value) || 0;
+        const country = parseFloat(document.getElementById('alloc-country').value) || 0;
+        const reserve = parseFloat(document.getElementById('alloc-reserve').value) || 0;
+
+        const totalPlannedSpend = fort + market + country + reserve;
+
+        if (totalPlannedSpend > state.kosha) {
+            log("Transaction Rejected: Insufficient Kosha balance to cover budgeted allocation!", "danger");
+            return;
+        }
+
+        // Apply allocations
+        state.kosha -= totalPlannedSpend;
+        log(`Allocated: Fort $${fort}, Market $${market}, Countryside $${country}, Reserve $${reserve}.`);
+
+        // Market investment increases future revenue
+        const newRevenueGrowth = Math.floor(market * 0.25);
+        state.mrr += Math.floor(newRevenueGrowth / 3);
+        log(`City Market growth added $${newRevenueGrowth} to quarterly revenue.`, "success");
+
+        // Quarterly Revenue collection
+        const quarterlyRevenue = state.mrr * 3;
+        state.kosha += quarterlyRevenue;
+        log(`Collected $${quarterlyRevenue} in quarterly client revenues.`);
+
+        // Trigger Kautilayan Event Card
+        const randomEvent = events[Math.floor(Math.random() * events.length)];
+        state.kosha -= randomEvent.cost;
+        log(`EVENT: ${randomEvent.title} - ${randomEvent.description}`, randomEvent.type);
+
+        // End of Quarter Evaluation
+        if (state.kosha <= 0) {
+            state.kosha = 0;
+            updateUI();
+            log("CRITICAL FAILURE: The Kosha is depleted. The startup has run out of liquidity!", "danger");
+            document.getElementById('next-quarter-btn').disabled = true;
+            state.gameOver = true;
+            return;
+        }
+
+        if (state.quarter >= 4) {
+            updateUI();
+            log(`SUCCESS: You completed Year 1! Final Kosha Treasury Balance: $${state.kosha.toLocaleString()}`, "success");
+            document.getElementById('next-quarter-btn').disabled = true;
+            state.gameOver = true;
+            return;
+        }
+
+        state.quarter++;
+        updateUI();
+    }
+
+    // Initialize UI
+    updateUI();
+</script>
+</body>
+</html>
